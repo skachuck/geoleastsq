@@ -16,6 +16,7 @@ References:
 """
 
 import numpy as np
+from scipy.linalg import solve
 
 def lm_minimize(f, x0, jac=None, lup=5, ldo=10, fargs=(), fkwargs={}, jargs=(),
                 jkwargs={}, keep_steps=False, j=None, r=None):
@@ -45,7 +46,7 @@ def lm_minimize(f, x0, jac=None, lup=5, ldo=10, fargs=(), fkwargs={}, jargs=(),
         g = j.T.dot(j) + l*I
         gradC = j.T.dot(r)
 
-        xnew = x - SAFE*np.linalg.inv(g).dot(gradC)
+        xnew = x - SAFE*solve(g,gradC)
         rnew = f(xnew, *fargs, **fkwargs)
         Cnew = 0.5*rnew.dot(rnew)
 
@@ -147,15 +148,9 @@ Iter {} nfevals {} njevals {} accept {}
         i += 1
 
         g = j.T.dot(j) + l*I
-        gradC = j.T.dot(r)
+        gradC = j.T.dot(r) 
 
-        try:
-            gi = np.linalg.inv(g)
-        except:
-            print('PROBLEM IN INV, l={}'.format(l))
-            break
-
-        dx1 = - gi.dot(gradC)
+        dx1 = -solve(g, gradC) 
 
         if not geo:
             dx2 = 0
