@@ -157,7 +157,7 @@ Iter {} nfevals {} njevals {} accept {}
         else:
             k = 2/h*((f(x + h*dx1, *fargs, **fkwargs) - r)/h - j.dot(dx1))
             fevals += 1
-            dx2 = - 0.5*gi.dot(j.T.dot(k))
+            dx2 = - 0.5*solve(g, j.T.dot(k))
 
             truncerr = 2*np.sqrt(dx2.dot(dx2))/np.sqrt(dx1.dot(dx1)) 
 
